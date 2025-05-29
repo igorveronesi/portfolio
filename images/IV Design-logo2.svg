@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="46" height="45" version="1.1" viewBox="0 0 46 45">
+  <!-- Generator: Adobe Illustrator 29.4.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 152)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill-rule: evenodd;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Group">
+    <path id="Rectangle-5" class="st0" d="M0,0h46v45H0V0Z"/>
+  </g>
+  <path class="st1" d="M9.7,12l13.3,23,.9-1.6L12.5,13.6h1.8s0,0,0,0h1.8s9.6,16.6,9.6,16.6l.9-1.6-9.6-16.6h-7.4ZM28.9,12l-4.1,7-4-7h-1.8l5.9,10.2,5-8.6h3.7s-6.8,11.8-6.8,11.8l.9,1.6,8.7-15h-7.4Z"/>
+</svg>
