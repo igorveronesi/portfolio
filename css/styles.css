@@ -2,10 +2,10 @@
 
   Master stylesheet (styles.css)
 
-  Project: Eight Template
+  Project: IV Design | Portfolio Igor Veronesi | UX/UI Designer / Brand Designer / Motion Designer / Editorial Designer
   Version: 1.0
-  Author: By Themanoid
-  Last change: 31 July 2016
+  Author: Igor Veronesi
+  Last change: 04 June 2025
 
   ---
 
@@ -510,6 +510,34 @@ ul.navigation li:hover ul.dropdown {
 .grid.classic .item:hover .thumb .btn {
   opacity: 1;
   bottom: 0;
+}
+
+/* Custom styles for video thumbnail */
+.grid.classic .item .thumb video {
+  width: 100%;
+  height: auto; /* Mantém a proporção do vídeo */
+  display: block; /* Remove espaços extras abaixo do vídeo */
+  object-fit: cover; /* Garante que o vídeo preencha o container sem distorcer */
+  -webkit-transition: opacity .3s; /* Mesma transição das imagens */
+  transition: opacity .3s; /* Mesma transição das imagens */
+}
+
+/* Efeito de hover para o vídeo, replicando o comportamento da imagem */
+.grid.classic .item:hover .thumb video {
+  opacity: .5; /* Mesma opacidade das imagens no hover */
+}
+
+/* Remover controles do vídeo para que ele se pareça mais com um GIF/imagem no thumbnail */
+.grid.classic .item .thumb video::-webkit-media-controls {
+  display: none !important;
+}
+
+.grid.classic .item .thumb video::--webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.grid.classic .item .thumb video {
+  pointer-events: none; /* Impede que os controles do vídeo apareçam ao clicar */
 }
 
 .grid.col-4 .item {
