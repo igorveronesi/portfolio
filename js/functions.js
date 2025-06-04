@@ -38,10 +38,19 @@
   var $grid = $('.grid');
 
   $grid.imagesLoaded(function(){
-    // Initialize Masonry after the images are loaded
+    // Initialize Packery after the images are loaded
     $grid.packery({
       itemSelector: '.item', // Portfolio item
     });
+  });
+
+  // NOVO: Recalcula o layout do Packery ao redimensionar a janela
+  $(window).on('resize', function() {
+    // Adicione um pequeno delay para evitar execuções excessivas em redimensionamento contínuo
+    clearTimeout($grid.data('packeryResizeTimer'));
+    $grid.data('packeryResizeTimer', setTimeout(function(){
+      $grid.packery(); // Dispara o layout do Packery
+    }, 100)); // Delay de 100ms
   });
 
   $('.filter-trigger').on('click', function(e){
@@ -50,80 +59,43 @@
     $('html,body').animate({
       scrollTop: $('.grid').offset().top+'px'
     }, 500);
-    $('.filter-container').fadeIn();
+
+    // NOVO: Força um relayout do Packery após a filtragem
+    // Pode ser necessário um pequeno delay para que a visibilidade dos itens se ajuste antes do relayout
+    setTimeout(function() {
+        $grid.packery();
+    }, 600); // Ajuste o tempo para ser um pouco mais que a duração da animação (500ms)
   });
 
-  $('.filter-container').on('click', function(e){
+
+  $('.close-filter').on('click', function(e){
     e.preventDefault();
     $('body').removeClass('filters-active');
-    $('.filter-container').fadeOut();
+
+    // NOVO: Recalcula o Packery ao fechar o filtro
+    setTimeout(function() {
+        $grid.packery();
+    }, 400); // Um pequeno delay para a transição do filtro
   });
 
-  $('.filter').on('click', function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    var selected = $(this).attr('data-filter');
-    $('.filter.active').removeClass('active');
-    $(this).addClass('active');
-    $('.grid').find('.item:not(.'+selected+')').css({
-      '-webkit-transition' : 'all .25s',
-      'transition' : 'all .25s',
-      '-webkit-transform' : 'scale(0)',
-      'transform' : 'scale(0)',
-      '-webkit-opacity' : '0',
-      'opacity' : '0',
-    });
-    setTimeout(function(){
-      $('.grid').find('.item:not(.'+selected+')').hide(0);
-      $('.grid').find('.'+selected).show(0).css({
-        '-webkit-transform' : 'scale(1)',
-        '-webkit-opacity' : '1',
-        'transform' : 'scale(1)',
-        'opacity' : '1'
-      });
-      $grid.packery('layout');
-    }, 250);
-  });
-
-  $(window).on('resize', function(){
-    // Change Masonry on resize
-    setTimeout(function(){
-      $grid.packery('layout');
-      window.requestAnimationFrame(inView); // Make new items visible
-    }, 1500);
-  });
-
-  // You can use anchor links, using the .anchor class
-  $('.anchor').on('click', function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    var href = $(this).attr('href');
-    $('html,body').animate({
-      scrollTop : $(href).offset().top+'px'
-    });
-  });
-
-  // Parallax background script, use the ".parallax" class.
-  var parallaxSpeed = 0.15;
-
-  function parallax(){
-    // Parallax scrolling function
-    $('.parallax').each(function(){
-      var el = $(this);
-      var yOffset = $(window).scrollTop(),
-          parallaxOffset = yOffset * parallaxSpeed,
-          parallaxOffset = +parallaxOffset.toFixed(2);
-      if(el.hasClass('fs')){
-        el.css('transform','translate3d(-50%,-'+(50-parallaxOffset*0.15)+'%,0)');
-      } else {
-        el.css('transform','translate3d(0,'+parallaxOffset+'px,0)');
-      }
+  // Typed functions
+  if($('.typed').length){
+    $(".typed").typed({
+      stringsElement: $('.typed-strings'),
+      typeSpeed: 30,
+      backDelay: 500,
+      loop: true,
+      contentType: 'html', // or text
+      // defaults to false for infinite loop
+      loopCount: false,
+      callback: function(){ },
+      resetCallback: function() { newTyped(); }
     });
   }
 
-  // Initialize functions on scroll
-  $(window).on('scroll', function(){
-    window.requestAnimationFrame(parallax); // Parallax
+  // Parallax
+  $('.parallax').parallax({
+    speed : 0.5
   });
 
   var $animation_elements = $('.item, .fadein'); // The fly-in element, used for elements that fly-in the window after they're visible on screen
@@ -164,10 +136,48 @@
     window.requestAnimationFrame(inView);
   });
 
-  $(window).on('pageshow', function(event) {
-      if (event.originalEvent.persisted) {
-          window.location.reload()
-      }
+  $(window).on('pageshow', function(e) {
+    if (e.persisted) {
+        window.requestAnimationFrame(inView);
+    }
   });
 
-})(jQuery);
+  // Contact form
+  $('#form').submit(function(e){
+    e.preventDefault();
+    var $form = $(this);
+    var required = $form.find('[required]');
+    var serializedData = $form.serialize();
+    var url = $('#form').attr('action');
+    $form.find('#send, .form-control').prop('disabled', true);
+    $.post(url, serializedData, function(response) {
+      if(response == 'sent'){
+        console.log('Sent');
+        $('#send').text('Thank you!');
+      } else {
+        console.log('Error: Something went wrong!')
+      }
+    });
+  });
+
+  // Search
+  $('.search-trigger').on('click', function(e){
+    e.preventDefault();
+    $('.search').toggleClass('tapped');
+    $(this).toggleClass('tapped');
+    if($('.search').hasClass('tapped'))
+      setTimeout(function(){$('.search .form-control').focus()},300)
+  });
+
+  $('.search .close').on('click', function(e){
+    e.preventDefault();
+    $('.search-trigger, .search').removeClass('tapped');
+  });
+
+  // Toggle container
+  $('.toggle-container-btn').on('click', function(e){
+    e.preventDefault();
+    $('.toggleContainer').toggleClass('closed');
+  });
+
+})(jQuery); // End of use strict
